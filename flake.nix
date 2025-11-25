@@ -4,25 +4,28 @@
     nixpkgs.follows = "nix-ros-overlay/nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nix-ros-overlay, ... }:
-  let
+  outputs = {
+    self,
+    nixpkgs,
+    nix-ros-overlay,
+    ...
+  }: let
     system = "x86_64-linux";
 
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
-    overlays = [
-      nix-ros-overlay.overlays.default
-      (import ./overlays/patches.nix)
-        ];
-   };
+      overlays = [
+        nix-ros-overlay.overlays.default
+        (import ./overlays/patches.nix)
+      ];
+    };
 
-    # Use ROS2 "kilted" (rolling)
+    # Use ROS2 "jazzy" (rolling)
     ros = pkgs.rosPackages.jazzy;
-
   in {
     devShells.${system}.default = pkgs.mkShell {
-      name = "turtlebot3-kilted-shell";
+      name = "turtlebot3-jazzy-shell";
 
       packages = [
         (ros.buildEnv {
@@ -44,7 +47,7 @@
       ];
 
       shellHook = ''
-        echo "🐢 ROS 2 kilted TurtleBot3 environment"
+        echo "ROS 2 Jazzy TurtleBot3 environment"
 
         export OVERLAY_WS=$PWD/overlay
         export TURTLEBOT3_MODEL=burger
@@ -56,7 +59,7 @@
         # Clone overlay and fetch repos
         # ------------------------------------------------
         if [ ! -d overlay/src ]; then
-          echo "📥 Fetching overlay.x repos…"
+          echo "Fetching overlay.x repos…"
           mkdir -p overlay
           if [ -f overlay.repos ]; then
             cp overlay.repos overlay/
@@ -70,7 +73,7 @@
         # Build overlay once
         # ------------------------------------------------
         if [ ! -d overlay/install ]; then
-          echo "⚙️  Building overlay using colcon..."
+          echo "Building overlay using colcon..."
           cd overlay
           colcon build --symlink-install --mixin release --mixin ccache
           cd -
@@ -85,7 +88,7 @@
         # Generate SROS2 artifacts if missing
         # ------------------------------------------------
         if [ ! -d keystore ]; then
-          echo "🔐 Creating SROS2 keystore…"
+          echo "Creating SROS2 keystore…"
           ros2 security generate_artifacts -k keystore \
             -p policies/tb3_gazebo_policy.xml
         fi
@@ -94,7 +97,7 @@
         export ROS_SECURITY_STRATEGY=Enforce
         export ROS_SECURITY_KEYSTORE=$PWD/keystore
 
-        echo "✅ ROS 2 kilted shell ready."
+        echo "ROS 2 jazzy shell ready."
       '';
     };
   };
