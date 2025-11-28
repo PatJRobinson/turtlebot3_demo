@@ -22,18 +22,17 @@
       };
       overlays = [
         nix-ros-overlay.overlays.default
-        (import ./overlays/ros-security.nix)
         (import ./overlays/patches.nix)
         (import ./overlays/colcon-mixin.nix)
       ];
     };
   in {
     devShells.${system}.default = pkgs.mkShell {
-      name = "turtlebot3-jazzy-shell";
+      name = "turtlebot3-kilted-shell";
 
-      packages = with pkgs.rosPackages.jazzy; [
+      packages = with pkgs.rosPackages.kilted; [
         (
-          with pkgs.rosPackages.jazzy;
+          with pkgs.rosPackages.kilted;
             buildEnv {
               paths = [
                 ros-core
@@ -60,7 +59,7 @@
       ];
 
       shellHook = ''
-        echo "ROS 2 Jazzy TurtleBot3 environment"
+        echo "ROS 2 kilted TurtleBot3 environment"
 
         export OVERLAY_WS=$PWD/overlay
         export TURTLEBOT3_MODEL=burger
@@ -117,7 +116,7 @@
         export ROS_SECURITY_STRATEGY=Enforce
         export ROS_SECURITY_KEYSTORE=$PWD/keystore
 
-        echo "ROS 2 jazzy shell ready."
+        echo "ROS 2 kilted shell ready."
       '';
     };
   };

@@ -3,7 +3,7 @@ self: super: {
   rosPackages =
     super.rosPackages
     // {
-      jazzy = super.rosPackages.jazzy.overrideScope (rosSelf: rosSuper: {
+      kilted = super.rosPackages.kilted.overrideScope (rosSelf: rosSuper: {
         fastdds = rosSuper.fastdds.overrideAttrs (old: {
           cmakeFlags =
             (old.cmakeFlags or [])

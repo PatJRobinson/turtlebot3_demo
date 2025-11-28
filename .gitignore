@@ -1,3 +1,6 @@
 .envrc
 .direnv/
 *log/
+keystore/
+overlay/install/
+overlay/build/
