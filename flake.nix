@@ -27,26 +27,26 @@
         (import ./overlays/colcon-mixin.nix)
       ];
     };
-
-    # Use ROS2 "jazzy" (rolling)
-    ros = pkgs.rosPackages.jazzy;
   in {
     devShells.${system}.default = pkgs.mkShell {
       name = "turtlebot3-jazzy-shell";
 
-      packages = [
-        (ros.buildEnv {
-          paths = [
-            ros.ros-core
-            ros.ament-cmake-core
-            ros.python-cmake-module
-            ros.sros2
-            ros.turtlebot3
-            ros.turtlebot3-gazebo
-            ros.navigation2
-            ros.nav2-bringup
-          ];
-        })
+      packages = with pkgs.rosPackages.jazzy; [
+        (
+          with pkgs.rosPackages.jazzy;
+            buildEnv {
+              paths = [
+                ros-core
+                ament-cmake-core
+                python-cmake-module
+                sros2
+                turtlebot3
+                turtlebot3-gazebo
+                navigation2
+                nav2-bringup
+              ];
+            }
+        )
 
         pkgs.colcon
         pkgs.python3Packages.vcstools

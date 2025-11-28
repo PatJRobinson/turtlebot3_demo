@@ -12,7 +12,7 @@ self: super: {
             ];
         });
 
-        rmw-fastrtps-cpp = rosSuper.rmw-fastrtps-cpp.overrideAttrs (old: {
+        "rmw-fastrtps-cpp" = rosSuper."rmw-fastrtps-cpp".overrideAttrs (old: {
           cmakeFlags =
             (old.cmakeFlags or [])
             ++ [
@@ -20,7 +20,7 @@ self: super: {
             ];
         });
 
-        rmw-fastrtps-dynamic-cpp = rosSuper.rmw-fastrtps-dynamic-cpp.overrideAttrs (old: {
+        "rmw-fastrtps-dynamic-cpp" = rosSuper."rmw-fastrtps-dynamic-cpp".overrideAttrs (old: {
           cmakeFlags =
             (old.cmakeFlags or [])
             ++ [
@@ -28,7 +28,7 @@ self: super: {
             ];
         });
 
-        rmw-fastrtps-shared-cpp = rosSuper.rmw-fastrtps-shared-cpp.overrideAttrs (old: {
+        "rmw-fastrtps-shared-cpp" = rosSuper."rmw-fastrtps-shared-cpp".overrideAttrs (old: {
           cmakeFlags =
             (old.cmakeFlags or [])
             ++ [
