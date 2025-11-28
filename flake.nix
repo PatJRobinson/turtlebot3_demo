@@ -14,10 +14,17 @@
 
     pkgs = import nixpkgs {
       inherit system;
-      config.allowUnfree = true;
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "freeimage-3.18.0-unstable-2024-04-18"
+        ];
+      };
       overlays = [
         nix-ros-overlay.overlays.default
+        (import ./overlays/ros-security.nix)
         (import ./overlays/patches.nix)
+        (import ./overlays/colcon-mixin.nix)
       ];
     };
 
@@ -31,6 +38,8 @@
         (ros.buildEnv {
           paths = [
             ros.ros-core
+            ros.ament-cmake-core
+            ros.python-cmake-module
             ros.sros2
             ros.turtlebot3
             ros.turtlebot3-gazebo
@@ -44,6 +53,10 @@
         pkgs.python3Packages.argcomplete
         pkgs.tree
         pkgs.ccache
+        pkgs.byobu
+        pkgs.tmux
+        pkgs.ncurses
+        pkgs.glances
       ];
 
       shellHook = ''
@@ -69,13 +82,20 @@
           fi
         fi
 
+        # Initialize colcon mixins (first time)
+        if ! colcon mixin list > /dev/null 2>&1; then
+          echo "📦 Setting up colcon mixin repository..."
+          colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        fi
+
         # ------------------------------------------------
         # Build overlay once
         # ------------------------------------------------
         if [ ! -d overlay/install ]; then
           echo "Building overlay using colcon..."
           cd overlay
-          colcon build --symlink-install --mixin release --mixin ccache
+          colcon build --symlink-install --mixin release ccache
           cd -
         fi
 
